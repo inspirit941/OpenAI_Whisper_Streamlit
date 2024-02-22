@@ -1,8 +1,10 @@
 import os
-import whisper
+import whisper_pipeline
 import streamlit as st
 from pydub import AudioSegment
+import dotenv
 
+dotenv.load_dotenv()
 st.set_page_config(
     page_title="Whisper based ASR",
     page_icon="musical_note",
@@ -27,45 +29,45 @@ def to_mp3(audio_file, output_audio_file, upload_path, download_path):
         audio_data = AudioSegment.from_mp3(os.path.join(upload_path,audio_file.name))
         audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
 
-    elif audio_file.name.split('.')[-1].lower()=="ogg":
-        audio_data = AudioSegment.from_ogg(os.path.join(upload_path,audio_file.name))
-        audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
-
-    elif audio_file.name.split('.')[-1].lower()=="wma":
-        audio_data = AudioSegment.from_file(os.path.join(upload_path,audio_file.name),"wma")
-        audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
-
-    elif audio_file.name.split('.')[-1].lower()=="aac":
-        audio_data = AudioSegment.from_file(os.path.join(upload_path,audio_file.name),"aac")
-        audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
-
-    elif audio_file.name.split('.')[-1].lower()=="flac":
-        audio_data = AudioSegment.from_file(os.path.join(upload_path,audio_file.name),"flac")
-        audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
-
-    elif audio_file.name.split('.')[-1].lower()=="flv":
-        audio_data = AudioSegment.from_flv(os.path.join(upload_path,audio_file.name))
-        audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
-
-    elif audio_file.name.split('.')[-1].lower()=="mp4":
-        audio_data = AudioSegment.from_file(os.path.join(upload_path,audio_file.name),"mp4")
-        audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
+    # elif audio_file.name.split('.')[-1].lower()=="ogg":
+    #     audio_data = AudioSegment.from_ogg(os.path.join(upload_path,audio_file.name))
+    #     audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
+    #
+    # elif audio_file.name.split('.')[-1].lower()=="wma":
+    #     audio_data = AudioSegment.from_file(os.path.join(upload_path,audio_file.name),"wma")
+    #     audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
+    #
+    # elif audio_file.name.split('.')[-1].lower()=="aac":
+    #     audio_data = AudioSegment.from_file(os.path.join(upload_path,audio_file.name),"aac")
+    #     audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
+    #
+    # elif audio_file.name.split('.')[-1].lower()=="flac":
+    #     audio_data = AudioSegment.from_file(os.path.join(upload_path,audio_file.name),"flac")
+    #     audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
+    #
+    # elif audio_file.name.split('.')[-1].lower()=="flv":
+    #     audio_data = AudioSegment.from_flv(os.path.join(upload_path,audio_file.name))
+    #     audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
+    #
+    # elif audio_file.name.split('.')[-1].lower()=="mp4":
+    #     audio_data = AudioSegment.from_file(os.path.join(upload_path,audio_file.name),"mp4")
+    #     audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
     return output_audio_file
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def process_audio(filename, model_type):
-    model = whisper.load_model(model_type)
-    result = model.transcribe(filename)
-    return result["text"]
+    text = whisper_pipeline.run(model_type, filename)
+    return text
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def save_transcript(transcript_data, txt_file):
     with open(os.path.join(transcript_path, txt_file),"w") as f:
         f.write(transcript_data)
 
-st.title("🗣 Automatic Speech Recognition using whisper by OpenAI ✨")
-st.info('✨ Supports all popular audio formats - WAV, MP3, MP4, OGG, WMA, AAC, FLAC, FLV 😉')
-uploaded_file = st.file_uploader("Upload audio file", type=["wav","mp3","ogg","wma","aac","flac","mp4","flv"])
+st.title("🗣 Automatic Speech Recognition using guideu by OpenAI Whisper ✨")
+# MP4, OGG, WMA, AAC, FLAC, FLV "ogg","wma","aac","flac","mp4","flv"
+st.info('✨ Supports popular audio formats - WAV, MP3 😉')
+uploaded_file = st.file_uploader("Upload audio file", type=["wav","mp3"])
 
 audio_file = None
 
@@ -85,7 +87,7 @@ if uploaded_file is not None:
         st.markdown("Feel free to play your uploaded audio file 🎼")
         st.audio(audio_bytes)
     with col2:
-        whisper_model_type = st.radio("Please choose your model type", ('Tiny', 'Base', 'Small', 'Medium', 'Large'))
+        whisper_model_type = st.radio("Please choose your model type", (os.getenv("model_300step", "Tiny"), os.getenv("model_finetune_v1", "Base"), 'Small', 'Medium', 'Large'))
 
     if st.button("Generate Transcript"):
         with st.spinner(f"Generating Transcript... 💫"):
