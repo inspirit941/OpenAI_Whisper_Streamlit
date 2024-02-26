@@ -1,20 +1,16 @@
 FROM python:3.7
 
-RUN pip install virtualenv
-ENV VIRTUAL_ENV=/venv
-RUN virtualenv venv -p python3
-ENV PATH="VIRTUAL_ENV/bin:$PATH"
-
 WORKDIR /app
 ADD . /app
 
 # Install dependencies
-RUN pip install -r requirements.txt
-RUN apt-get update
-RUN apt-get install ffmpeg
+RUN apt-get update -q \
+    && apt-get install --no-install-recommends -qy python3-dev g++ gcc
+RUN pip install -r requirements.txt --progress-bar off
+RUN apt-get install -y ffmpeg
 
 # Expose port 
-ENV PORT 8501
+ENV PORT=8501
 
 # Run the application:
 CMD ["streamlit","run","app.py"]
