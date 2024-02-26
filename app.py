@@ -1,5 +1,5 @@
 import os
-import whisper_pipeline
+import whisper
 import streamlit as st
 from pydub import AudioSegment
 import dotenv
@@ -56,8 +56,10 @@ def to_mp3(audio_file, output_audio_file, upload_path, download_path):
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def process_audio(filename, model_type):
-    text = whisper_pipeline.run(model_type, filename)
-    return text
+    model = whisper.load_model(model_type)
+    result = model.transcribe(filename)
+    # text = whisper_pipeline.run(model_type, filename)
+    return result['text']
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def save_transcript(transcript_data, txt_file):
