@@ -95,12 +95,12 @@ if uploaded_file is not None:
         st.audio(audio_bytes)
     with col2:
         whisper_model_type = st.radio("Please choose your model type", (os.getenv("model_300step", "Tiny"), os.getenv("model_finetune_v1", "Base"), 'Small', 'Medium', 'Large'))
-
+        whisper_model_name = whisper_model_type.split("/")[-1]
     if st.button("Generate Transcript"):
         with st.spinner(f"Generating Transcript... 💫"):
             transcript = process_audio(str(os.path.abspath(os.path.join(download_path,output_audio_file))), whisper_model_type.lower())
 
-            output_txt_file = str(output_audio_file.split('.')[0]+".txt")
+            output_txt_file = str(output_audio_file.split('.')[0]+"_"+whisper_model_name+".txt")
 
             save_transcript(transcript, output_txt_file)
             output_file = open(os.path.join(transcript_path,output_txt_file),"r")
