@@ -76,8 +76,12 @@ audio_file = None
 
 if uploaded_file is not None:
     audio_bytes = uploaded_file.read()
+    output_audio_file = uploaded_file.name.split('.')[0] + '.mp3'
     with open(os.path.join(upload_path,uploaded_file.name),"wb") as f:
         f.write((uploaded_file).getbuffer())
+    if not os.path.exists(os.path.join(download_path, output_audio_file)):
+        with open(os.path.join(download_path, output_audio_file), "wb") as f:
+            f.write((uploaded_file).getbuffer())
     with st.spinner(f"Processing Audio ... 💫"):
         output_audio_file = uploaded_file.name.split('.')[0] + '.mp3'
         output_audio_file = to_mp3(uploaded_file, output_audio_file, upload_path, download_path)
