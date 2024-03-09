@@ -21,4 +21,4 @@ jobs:
         run: docker build -t inspirit941/openai-whisper-streamlit:${GITHUB_REF##*/} .
 
       - name: Push Docker image
-        run: docker push your_username/your_image_name:${GITHUB_REF##*/}
+        run: docker push inspirit941/openai-whisper-streamlit:${GITHUB_REF##*/}
