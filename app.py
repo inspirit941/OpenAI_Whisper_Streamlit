@@ -94,7 +94,7 @@ if uploaded_file is not None:
         st.markdown("Feel free to play your uploaded audio file 🎼")
         st.audio(audio_bytes)
     with col2:
-        whisper_model_type = st.radio("Please choose your model type", (os.getenv("model_300step", "Tiny"), os.getenv("model_finetune_v1", "Base"), 'Small', 'Medium', 'Large'))
+        whisper_model_type = st.radio("Please choose your model type", (os.getenv("model", "Base")))
         whisper_model_name = whisper_model_type.split("/")[-1]
     if st.button("Generate Transcript"):
         with st.spinner(f"Generating Transcript... 💫"):
