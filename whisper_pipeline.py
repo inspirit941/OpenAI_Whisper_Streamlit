@@ -1,3 +1,5 @@
+import os
+
 import torch
 from transformers import (
     AutomaticSpeechRecognitionPipeline,
@@ -20,7 +22,7 @@ def run(model_id, audio):
     print(device)
     language = "ko"
     task = "transcribe"
-    chunk_length_s = 20
+    chunk_length_s = int(os.getenv("CHUNK_SIZE", 30))
     tokenizer = WhisperTokenizer.from_pretrained("openai/whisper-medium", language=language, task=task)
     processor = WhisperProcessor.from_pretrained("openai/whisper-medium", language=language, task=task)
     feature_extractor = processor.feature_extractor
