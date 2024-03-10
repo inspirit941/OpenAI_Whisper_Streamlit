@@ -6,9 +6,11 @@ from transformers import (
     WhisperProcessor,
 )
 import time
+from app import model_dict
 
 
-def run(model, audio):
+def run(model_id, audio):
+    model = model_dict[model_id]
     if torch.cuda.is_available():
         device = torch.device("cuda")
     elif torch.backends.mps.is_available(): ## 애플 M1맥북

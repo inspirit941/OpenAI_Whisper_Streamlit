@@ -64,8 +64,7 @@ def process_audio(filename, model_id):
     # model = whisper.load_model(model_type)
     # result = model.transcribe(filename)
     # return result['text']
-    model = model_dict[model_id]
-    text = whisper_pipeline.run(model, filename)
+    text = whisper_pipeline.run(model_id, filename)
     return text
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
