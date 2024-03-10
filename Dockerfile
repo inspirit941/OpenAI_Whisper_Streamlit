@@ -10,6 +10,7 @@ RUN apt-get update -q \
 RUN pip install -r requirements.txt --progress-bar off
 RUN apt-get install -y ffmpeg
 
+RUN mkdir "downloads"
 RUN mkdir ${MODEL_NAME}
 RUN pip install -U "huggingface_hub[cli]"
 RUN huggingface-cli download "GuideU/${MODEL_NAME}" --local-dir ${MODEL_NAME}

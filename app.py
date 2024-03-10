@@ -2,6 +2,7 @@ import os
 import whisper_pipeline
 import streamlit as st
 from pydub import AudioSegment
+from transformers import WhisperForConditionalGeneration
 import dotenv
 
 dotenv.load_dotenv()
@@ -17,6 +18,10 @@ audio_tags = {'comments': 'Converted using pydub!'}
 upload_path = "uploads/"
 download_path = "downloads/"
 transcript_path = "transcripts/"
+
+model = WhisperForConditionalGeneration.from_pretrained(
+        os.getenv("model", "whisper-finetune-v2")
+)
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def to_mp3(audio_file, output_audio_file, upload_path, download_path):
@@ -55,11 +60,11 @@ def to_mp3(audio_file, output_audio_file, upload_path, download_path):
     return output_audio_file
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
-def process_audio(filename, model_type):
+def process_audio(filename, model):
     # model = whisper.load_model(model_type)
     # result = model.transcribe(filename)
     # return result['text']
-    text = whisper_pipeline.run(model_type, filename)
+    text = whisper_pipeline.run(model, filename)
     return text
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
@@ -94,11 +99,12 @@ if uploaded_file is not None:
         st.markdown("Feel free to play your uploaded audio file 🎼")
         st.audio(audio_bytes)
     with col2:
-        whisper_model_type = st.radio("Please choose your model type", (os.getenv("model", "Base")))
+        print(os.getenv("model"))
+        whisper_model_type = st.radio("Please choose your model type", [os.getenv("model", "Base")])
         whisper_model_name = whisper_model_type.split("/")[-1]
     if st.button("Generate Transcript"):
         with st.spinner(f"Generating Transcript... 💫"):
-            transcript = process_audio(str(os.path.abspath(os.path.join(download_path,output_audio_file))), whisper_model_type.lower())
+            transcript = process_audio(str(os.path.abspath(os.path.join(download_path,output_audio_file))), model)
 
             output_txt_file = str(output_audio_file.split('.')[0]+"_"+whisper_model_name+".txt")
 

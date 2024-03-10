@@ -8,11 +8,7 @@ from transformers import (
 import time
 
 
-def run(model_id, audio):
-    model = WhisperForConditionalGeneration.from_pretrained(
-        model_id
-    )
-
+def run(model, audio):
     if torch.cuda.is_available():
         device = torch.device("cuda")
     elif torch.backends.mps.is_available(): ## 애플 M1맥북
