@@ -60,7 +60,6 @@ def to_mp3(audio_file, output_audio_file, upload_path, download_path):
     #     audio_data.export(os.path.join(download_path,output_audio_file), format="mp3", tags=audio_tags)
     return output_audio_file
 
-@st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def process_audio(filename, model_id_input):
     # model = whisper.load_model(model_type)
     # result = model.transcribe(filename)
