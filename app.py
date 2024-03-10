@@ -2,6 +2,7 @@ import os
 import whisper_pipeline
 import streamlit as st
 from pydub import AudioSegment
+import torch
 from transformers import WhisperForConditionalGeneration
 import dotenv
 
@@ -75,6 +76,7 @@ def save_transcript(transcript_data, txt_file):
 st.title("🗣 Automatic Speech Recognition using guideu by OpenAI Whisper ✨")
 # MP4, OGG, WMA, AAC, FLAC, FLV "ogg","wma","aac","flac","mp4","flv"
 st.info('✨ Supports popular audio formats - WAV, MP3 😉')
+st.info('✨ Device Type: {} '.format(torch.device("cuda" if torch.cuda.is_available() else "cpu")))
 uploaded_file = st.file_uploader("Upload audio file", type=["wav","mp3"])
 
 audio_file = None
