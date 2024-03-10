@@ -20,8 +20,9 @@ upload_path = "uploads/"
 download_path = "downloads/"
 transcript_path = "transcripts/"
 
-model_id = os.getenv("model", "Base")
-model_dict = {model_id: WhisperForConditionalGeneration.from_pretrained(os.getenv("model", "Base"))}
+model_id = os.getenv("model", "whisper-finetune-v2")
+print(model_id)
+model_dict = {model_id: WhisperForConditionalGeneration.from_pretrained(os.getenv("model", "whisper-finetune-v2"))}
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def to_mp3(audio_file, output_audio_file, upload_path, download_path):
@@ -60,11 +61,11 @@ def to_mp3(audio_file, output_audio_file, upload_path, download_path):
     return output_audio_file
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
-def process_audio(filename, model_id):
+def process_audio(filename, model_id_input):
     # model = whisper.load_model(model_type)
     # result = model.transcribe(filename)
     # return result['text']
-    text = whisper_pipeline.run(model_id, filename)
+    text = whisper_pipeline.run(model_id_input, filename)
     return text
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
