@@ -110,7 +110,7 @@ if uploaded_file is not None:
             output_txt_file = str(output_audio_file.split('.')[0]+"_"+whisper_model_name+".txt")
 
             save_transcript(transcript, output_txt_file)
-            output_file = open(os.path.join(transcript_path,output_txt_file),"r")
+            output_file = open(os.path.join(transcript_path,output_txt_file),"r", encoding='utf-8')
             output_file_data = output_file.read()
 
         if st.download_button(
