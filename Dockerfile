@@ -15,7 +15,8 @@ RUN apt-get update -q \
 RUN apt-get install -y ffmpeg
 RUN pip install -r requirements.txt --progress-bar off
 
-# Expose port 
+# Expose port
+ENV PYTHONIOENCODING=utf-8
 ENV PORT=8501
 
 # Run the application:
