@@ -69,7 +69,7 @@ def process_audio(filename, model_id_input):
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def save_transcript(transcript_data, txt_file):
-    with open(os.path.join(transcript_path, txt_file),"w") as f:
+    with open(os.path.join(transcript_path, txt_file),"w",encoding="utf-8") as f:
         f.write(transcript_data)
 
 st.title("🗣 Automatic Speech Recognition using guideu by OpenAI Whisper ✨")
