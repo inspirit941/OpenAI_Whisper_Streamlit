@@ -22,6 +22,7 @@ def run(model_id, audio):
     print(device)
     language = "ko"
     task = "transcribe"
+    test = WhisperForConditionalGeneration.from_pretrained(os.getenv("model", "whisper-finetune-v2"))
     chunk_length_s = int(os.getenv("CHUNK_SIZE", 30))
     tokenizer = WhisperTokenizer.from_pretrained("openai/whisper-medium", language=language, task=task)
     processor = WhisperProcessor.from_pretrained("openai/whisper-medium", language=language, task=task)
@@ -38,8 +39,7 @@ def run(model_id, audio):
     def transcribe(audio):
         start = time.time()
         with torch.cuda.amp.autocast():
-            text = pipe(audio, generate_kwargs={"forced_decoder_ids": forced_decoder_ids}, max_new_tokens=255,
-                        return_timestamps=True)["text"]
+            text = pipe(audio, generate_kwargs={"forced_decoder_ids": forced_decoder_ids}, max_new_tokens=255)["text"]
         end = time.time()
         print(f"Elapsed time for transcription: {end - start} seconds")
         return text
