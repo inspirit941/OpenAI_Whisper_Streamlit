@@ -10,8 +10,8 @@ RUN pip install -U "huggingface_hub[cli]"
 RUN huggingface-cli download "GuideU/${MODEL_NAME}" --local-dir ${MODEL_NAME}
 
 
-ARG MODEL_NAME_2="GuideU/whisper-mobi-240418"
-RUN mkdir ${MODEL_NAME}
+ARG MODEL_NAME_2="whisper-mobi-240418"
+RUN mkdir ${MODEL_NAME_2}
 RUN huggingface-cli download "GuideU/${MODEL_NAME_2}" --local-dir ${MODEL_NAME_2}
 
 # Install dependencies
