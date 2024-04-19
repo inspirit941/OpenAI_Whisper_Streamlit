@@ -9,6 +9,11 @@ RUN mkdir ${MODEL_NAME}
 RUN pip install -U "huggingface_hub[cli]"
 RUN huggingface-cli download "GuideU/${MODEL_NAME}" --local-dir ${MODEL_NAME}
 
+
+ARG MODEL_NAME_2="GuideU/whisper-mobi-240418"
+RUN mkdir ${MODEL_NAME}
+RUN huggingface-cli download "GuideU/${MODEL_NAME_2}" --local-dir ${MODEL_NAME_2}
+
 # Install dependencies
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -qy python3-dev g++ gcc

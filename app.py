@@ -21,8 +21,12 @@ download_path = "downloads/"
 transcript_path = "transcripts/"
 
 model_id = os.getenv("model", "whisper-finetune-v2")
+model_id_2 = os.getenv("model_2", "whisper-mobi-240418")
 print(model_id)
-model_dict = {model_id: WhisperForConditionalGeneration.from_pretrained(os.getenv("model", "whisper-finetune-v2"))}
+model_dict = {
+    model_id: WhisperForConditionalGeneration.from_pretrained(os.getenv("model", "whisper-finetune-v2")),
+    model_id_2: WhisperForConditionalGeneration.from_pretrained(os.getenv("model", "whisper-mobi-240418"))
+}
 
 @st.cache(persist=True,allow_output_mutation=False,show_spinner=True,suppress_st_warning=True)
 def to_mp3(audio_file, output_audio_file, upload_path, download_path):
@@ -101,7 +105,7 @@ if uploaded_file is not None:
         st.audio(audio_bytes)
     with col2:
         print(os.getenv("model"))
-        whisper_model_type = st.radio("Please choose your model type", [os.getenv("model", "Base")])
+        whisper_model_type = st.radio("Please choose your model type", [os.getenv("model", "Base"), os.getenv("model_2","whisper-mobi-240418")])
         whisper_model_name = whisper_model_type.split("/")[-1]
     if st.button("Generate Transcript"):
         with st.spinner(f"Generating Transcript... 💫"):
