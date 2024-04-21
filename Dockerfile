@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 WORKDIR /app
 ADD . /app
-ARG MODEL_NAME="whisper-finetune-v2"
+ARG MODEL_NAME="whisper_wak"
 
 RUN mkdir "downloads"
 RUN mkdir ${MODEL_NAME}
